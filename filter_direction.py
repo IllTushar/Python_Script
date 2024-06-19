@@ -10,9 +10,9 @@ def filter_effect(interactions):
         elif 'decreased' in interaction:
             directions.append('decreased')
         elif 'increase' in interaction:
-            directions.append('increase')
+            directions.append('increased')
         elif 'decrease' in interaction:
-            directions.append('decrease')
+            directions.append('decreased')
         elif 'reduced' in interaction:
             directions.append('decreased')
         else:
