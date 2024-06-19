@@ -19,6 +19,9 @@ def remove_increase_decrease(interactions):
         elif 'decrease' in interaction:
             interaction = interaction.replace('decrease', '').strip()
             increase_decrease_data_list.append('decrease')
+        elif 'reduced' in interaction:
+            interaction = interaction.replace('reduced', '').strip()
+            increase_decrease_data_list.append('decrease')
         else:
             increase_decrease_data_list.append('')
 
@@ -31,12 +34,12 @@ def remove_increase_decrease(interactions):
 
 
 if __name__ == '__main__':
-    read_csv_file = pd.read_csv(r'C:\Users\gtush\Desktop\split_files\split_file_1.csv')
-    interactions = read_csv_file['Interaction']
+    read_csv_file = pd.read_csv(r'C:\Users\gtush\Desktop\Collection_2\separation_26.csv')
+    interactions = read_csv_file['sentence_without_base_drug']
 
     sentence, increase_decrease = remove_increase_decrease(interactions)
 
-    read_csv_file['remaining_sentence'] = sentence
+    read_csv_file['sentence_without_base_drug'] = sentence
     read_csv_file['Effect'] = increase_decrease
 
-    read_csv_file.to_csv(r'C:\Users\gtush\Desktop\CSV Collection\separation_1.csv', index=False)
+    read_csv_file.to_csv(r'C:\Users\gtush\Desktop\Collection_2\separation_26.csv', index=False)

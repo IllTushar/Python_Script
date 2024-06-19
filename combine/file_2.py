@@ -35,12 +35,12 @@ if __name__ == '__main__':
     print("Total time start ", total_time_start)
     read_csv_drug_bank = pd.read_csv(r'C:\Users\gtush\Desktop\DrugBankData\sorted_name_dec.csv')
 
-    for i in range(6, 51):
-        read_csv_interaction = pd.read_csv(fr'C:\Users\gtush\Desktop\CSV Collection_1\separation_{i}.csv')
+    for i in range(42, 64):
+        read_csv_interaction = pd.read_csv(fr'C:\Users\gtush\Desktop\Collection_2\separation_{i}.csv')
 
         time_start = dt.now()
         print("time start", time_start)
-        read_csv_interaction = read_csv_interaction.drop(columns=['remaining_sentence'])
+        # read_csv_interaction = read_csv_interaction.drop(columns=['remaining_sentence'])
 
         new_sentence, base_drug = filter_base_drug_name(read_csv_drug_bank, read_csv_interaction)
 
