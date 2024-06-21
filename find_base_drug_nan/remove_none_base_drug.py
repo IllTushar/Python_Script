@@ -8,10 +8,10 @@ def fill_all_base_drug_none(df):
 
 
 if __name__ == '__main__':
-    for i in range(1, 42):
+    for i in range(1, 541):
         # Read the CSV file into a DataFrame
-        read_csv = pd.read_csv(fr'C:\Users\gtush\Desktop\Collection_2\separation_{i}.csv')
-        print(read_csv.columns)
+        read_csv = pd.read_csv(fr'C:\Users\gtush\Desktop\sample_output\separation_{i}.csv')
+        # print(read_csv.columns)
 
         # Get rows where 'Base_drug' is None
         none_base_drug_df = fill_all_base_drug_none(read_csv)

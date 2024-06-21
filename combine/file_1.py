@@ -14,11 +14,14 @@ def remove_increase_decrease(interactions):
             interaction = interaction.replace('decreased', '').strip()
             increase_decrease_data_list.append('decreased')
         elif 'increase' in interaction:
-            interaction = interaction.replace('increase', '').strip()
-            increase_decrease_data_list.append('increase')
+            interaction = interaction.replace('increased', '').strip()
+            increase_decrease_data_list.append('increased')
         elif 'decrease' in interaction:
-            interaction = interaction.replace('decrease', '').strip()
-            increase_decrease_data_list.append('decrease')
+            interaction = interaction.replace('decreased', '').strip()
+            increase_decrease_data_list.append('decreased')
+        elif 'reduced' in interaction:
+            interaction = interaction.replace('decreased', '').strip()
+            increase_decrease_data_list.append('decreased')
         else:
             increase_decrease_data_list.append('')
 
@@ -40,17 +43,17 @@ def replace_drug_in_sentence(row):
 
 if __name__ == '__main__':
     for i in range(1, 1081):
-        read_csv_file = pd.read_csv(fr'C:\Users\gtush\Desktop\split_set\split_file_{i}.csv')
+        read_csv_file = pd.read_csv(fr'C:\Users\gtush\Desktop\CSV Collection_1\separation_{i}.csv')
         # Drop base drug column
-        read_csv_file = read_csv_file.drop(columns=['Base Drug'])
+        # read_csv_file = read_csv_file.drop(columns=['sentence_without_drug'])
 
         interactions = read_csv_file['Interaction']
 
         sentence, increase_decrease = remove_increase_decrease(interactions)
 
         read_csv_file['remaining_sentence'] = sentence
-        read_csv_file['Effect'] = increase_decrease
-        # Apply the function to each row and create a new column 'new_remain_sentence'
-        read_csv_file['sentence_without_drug'] = read_csv_file.apply(replace_drug_in_sentence, axis=1)
+        read_csv_file['Direction'] = increase_decrease
+        # # Apply the function to each row and create a new column 'new_remain_sentence'
+        # read_csv_file['sentence_without_drug'] = read_csv_file.apply(replace_drug_in_sentence, axis=1)
         read_csv_file.to_csv(fr'C:\Users\gtush\Desktop\CSV Collection_1\separation_{i}.csv', index=False)
         print("file ", fr'C:\Users\gtush\Desktop\CSV Collection_1\separation_{i}.csv')

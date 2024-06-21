@@ -15,13 +15,13 @@ def remove_increase_decrease(interactions):
             increase_decrease_data_list.append('decreased')
         elif 'increase' in interaction:
             interaction = interaction.replace('increase', '').strip()
-            increase_decrease_data_list.append('increase')
+            increase_decrease_data_list.append('increased')
         elif 'decrease' in interaction:
             interaction = interaction.replace('decrease', '').strip()
-            increase_decrease_data_list.append('decrease')
+            increase_decrease_data_list.append('decreased')
         elif 'reduced' in interaction:
             interaction = interaction.replace('reduced', '').strip()
-            increase_decrease_data_list.append('decrease')
+            increase_decrease_data_list.append('decreased')
         else:
             increase_decrease_data_list.append('')
 
@@ -30,16 +30,18 @@ def remove_increase_decrease(interactions):
         else:
             resultant_data_list.append(original_interaction)
 
-    return resultant_data_list, increase_decrease_data_list
+    return increase_decrease_data_list
 
 
 if __name__ == '__main__':
-    read_csv_file = pd.read_csv(r'C:\Users\gtush\Desktop\Collection_2\separation_26.csv')
-    interactions = read_csv_file['sentence_without_base_drug']
 
-    sentence, increase_decrease = remove_increase_decrease(interactions)
+    for i in range(22, 591):
+        read_csv_file = pd.read_csv(fr'C:\Users\gtush\Desktop\sample_output\separation_{i}.csv')
+        print(fr'C:\Users\gtush\Desktop\sample_output\separation_{i}.csv')
+        interactions = read_csv_file['Interaction']
 
-    read_csv_file['sentence_without_base_drug'] = sentence
-    read_csv_file['Effect'] = increase_decrease
+        increase_decrease = remove_increase_decrease(interactions)
+        read_csv_file = read_csv_file.drop(columns=['Effect'])
+        read_csv_file['Direction'] = increase_decrease
 
-    read_csv_file.to_csv(r'C:\Users\gtush\Desktop\Collection_2\separation_26.csv', index=False)
+        read_csv_file.to_csv(fr'C:\Users\gtush\Desktop\sample_output\separation_{i}.csv', index=False)

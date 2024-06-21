@@ -11,10 +11,10 @@ def merge_data_set(i, file_list):
 
 if __name__ == '__main__':
     data = []
-    for i in range(1, 42):
+    for i in range(1, 1081):
         data = merge_data_set(i, data)
 
     concat_file = pd.concat(data, ignore_index=True)
 
     # Save the result to a new CSV file
-    concat_file.to_csv(r'C:\Users\gtush\Desktop\NoneCsv\EmptyBase_drug.csv', index=False)
+    concat_file.to_csv(r'C:\Users\gtush\Desktop\NoneCsv\EmptyBase_drug2.csv', index=False)
