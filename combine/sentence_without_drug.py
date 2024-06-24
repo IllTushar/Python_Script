@@ -12,12 +12,12 @@ def remove_drug(read_csv_file):
 
 if __name__ == '__main__':
     for i in range(1, 9):
-        read_csv_file = pd.read_csv(
-            fr'C:\Users\gtush\Desktop\FinalCsv\complete_file_splits\complete_extract_data_file_part{i}.csv')
+        file_path = fr'C:\Users\gtush\Desktop\FinalCsv\complete_file_splits\complete_extract_data_file2_part{i}.csv'
+        read_csv_file = pd.read_csv(file_path)
 
         read_csv_file['remaining_sentence'] = read_csv_file.apply(remove_drug, axis=1)
 
         read_csv_file.to_csv(
-            fr'C:\Users\gtush\Desktop\FinalCsv\complete_file_splits\complete_extract_data_file_part{i}.csv',
+            file_path,
             index=False)
-        print(fr'C:\Users\gtush\Desktop\FinalCsv\complete_file_splits\complete_extract_data_file_part{i}.csv')
+        print(file_path)

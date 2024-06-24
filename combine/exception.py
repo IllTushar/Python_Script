@@ -33,18 +33,18 @@ def remove_increase_decrease(interactions):
     return resultant_data_list, increase_decrease_data_list
 
 
-def replace_drug_in_sentence(row):
-    drug_name = row['Drug']
-    sentence = row['remaining_sentence']
-    if drug_name in sentence:
-        return sentence.replace(drug_name, '').strip()
-    return sentence
+# def replace_drug_in_sentence(row):
+#     drug_name = row['Drug']
+#     sentence = row['remaining_sentence']
+#     if drug_name in sentence:
+#         return sentence.replace(drug_name, '').strip()
+#     return sentence
 
 
 if __name__ == '__main__':
     for i in range(1, 9):
-        file_path = fr'C:\Users\gtush\Desktop\FinalCsv\complete_file_splits\complete_extract_data_file2_part{i}.csv'
-        read_csv_file = pd.read_csv(file_path)
+        read_csv_file = pd.read_csv(
+            fr'C:\Users\gtush\Desktop\FinalCsv\complete_file_splits\complete_extract_data_file_part{i}.csv')
         # Drop base drug column
         # read_csv_file = read_csv_file.drop(columns=['sentence_without_drug'])
 
@@ -52,9 +52,11 @@ if __name__ == '__main__':
 
         sentence, increase_decrease = remove_increase_decrease(interactions)
 
-        read_csv_file['remaining_sentence'] = sentence
+        # read_csv_file['remaining_sentence'] = sentence
         read_csv_file['Direction'] = increase_decrease
         # # Apply the function to each row and create a new column 'new_remain_sentence'
-        # read_csv_file['sentence_without_drug'] = read_csv_file.apply(replace_drug_in_sentence, axis=1)
-        read_csv_file.to_csv(file_path,index=False)
-        print("file ", file_path)
+        # read_csv_file['remaining_sentence'] = read_csv_file.apply(replace_drug_in_sentence, axis=1)
+        read_csv_file.to_csv(
+            fr'C:\Users\gtush\Desktop\FinalCsv\complete_file_splits\complete_extract_data_file_part{i}.csv',
+            index=False)
+        print("file ", fr'C:\Users\gtush\Desktop\FinalCsv\complete_file_splits\complete_extract_data_file_part{i}.csv')
