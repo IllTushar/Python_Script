@@ -112,13 +112,25 @@ def filter_sentence(read_csv):
             pass
 
 
+def sepical_exception(read_csv):
+    for index, row in read_csv.iterrows():
+        if 'Enalaprilat' in row['Interaction'] and pd.isna(row['Base_drug']):
+            # Replace 'ethyl' with ''
+            new_sentence = row['sentence_without_base_drug'].replace('at', '')
+            # Assign the new sentence back to the DataFrame
+            read_csv.at[index, 'sentence_without_base_drug'] = new_sentence
+            # Set 'Icosapent ethyl' in the corresponding Base_drug cell
+            read_csv.at[index, 'Base_drug'] = 'Enalaprilat'
+
+
 if __name__ == '__main__':
-    for i in range(792, 1081):
+    for i in range(251, 501):
         # Read the CSV file
-        read_csv = pd.read_csv(fr'C:\Users\gtush\Desktop\sample\separation_{i}.csv')
+        read_csv = pd.read_csv(fr'C:\Users\gtush\Desktop\sample_output\separation_{i}.csv')
 
         # Apply the filter_sentence function
-        filter_sentence(read_csv)
+        # filter_sentence(read_csv)
+        sepical_exception(read_csv)
         # Save the modified DataFrame back to CSV
         read_csv.to_csv(fr'C:\Users\gtush\Desktop\sample_output\separation_{i}.csv', index=False)
         print(fr'C:\Users\gtush\Desktop\sample_output\separation_{i}.csv')

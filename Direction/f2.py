@@ -41,7 +41,7 @@ if __name__ == '__main__':
         interactions = read_csv_file['Interaction']
 
         increase_decrease = remove_increase_decrease(interactions)
-        read_csv_file = read_csv_file.drop(columns=['Effect'])
+
         read_csv_file['Direction'] = increase_decrease
 
         read_csv_file.to_csv(fr'C:\Users\gtush\Desktop\sample_output\separation_{i}.csv', index=False)

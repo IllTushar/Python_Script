@@ -42,8 +42,9 @@ def replace_drug_in_sentence(row):
 
 
 if __name__ == '__main__':
-    for i in range(1, 1081):
-        read_csv_file = pd.read_csv(fr'C:\Users\gtush\Desktop\CSV Collection_1\separation_{i}.csv')
+    for i in range(1, 9):
+        read_csv_file = pd.read_csv(
+            fr'C:\Users\gtush\Desktop\FinalCsv\complete_file_splits\complete_extract_data_file_part{i}.csv')
         # Drop base drug column
         # read_csv_file = read_csv_file.drop(columns=['sentence_without_drug'])
 
@@ -55,5 +56,7 @@ if __name__ == '__main__':
         read_csv_file['Direction'] = increase_decrease
         # # Apply the function to each row and create a new column 'new_remain_sentence'
         # read_csv_file['sentence_without_drug'] = read_csv_file.apply(replace_drug_in_sentence, axis=1)
-        read_csv_file.to_csv(fr'C:\Users\gtush\Desktop\CSV Collection_1\separation_{i}.csv', index=False)
-        print("file ", fr'C:\Users\gtush\Desktop\CSV Collection_1\separation_{i}.csv')
+        read_csv_file.to_csv(
+            fr'C:\Users\gtush\Desktop\FinalCsv\complete_file_splits\complete_extract_data_file_part{i}.csv',
+            index=False)
+        print("file ", fr'C:\Users\gtush\Desktop\FinalCsv\complete_file_splits\complete_extract_data_file_part{i}.csv')

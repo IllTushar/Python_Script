@@ -1,20 +1,26 @@
+import os
 import pandas as pd
-
-
-def merge_data_set(i, file_list):
-    # Read the CSV files
-    file_path = fr'C:\Users\gtush\Desktop\NoneCsv\none_base_drug{i}.csv'
-    read_file = pd.read_csv(file_path)
-    file_list.append(read_file)
-    return file_list
-
-
 if __name__ == '__main__':
-    data = []
-    for i in range(1, 1081):
-        data = merge_data_set(i, data)
+    # Define the folder containing the CSV files
+    folder_path = r'C:\Users\gtush\Desktop\DrugData'
 
-    concat_file = pd.concat(data, ignore_index=True)
+    # Get a list of all CSV files in the folder
+    csv_files = [file for file in os.listdir(folder_path) if file.endswith('.csv')]
 
-    # Save the result to a new CSV file
-    concat_file.to_csv(r'C:\Users\gtush\Desktop\NoneCsv\EmptyBase_drug2.csv', index=False)
+    # Initialize an empty list to hold the dataframes
+    dataframes = []
+
+    # Loop through the list of CSV files and read each one into a dataframe
+    for csv_file in csv_files:
+        file_path = os.path.join(folder_path, csv_file)
+        df = pd.read_csv(file_path)
+        dataframes.append(df)
+
+    # Concatenate all dataframes into one
+    merged_df = pd.concat(dataframes, ignore_index=True)
+
+    # Save the merged dataframe to a new CSV file
+    merged_df.to_csv(r'C:\Users\gtush\Desktop\FinalCsv\complete_extract_data_file.csv', index=False)
+
+    print("CSV files have been merged successfully into 'merged_output.csv'")
+
