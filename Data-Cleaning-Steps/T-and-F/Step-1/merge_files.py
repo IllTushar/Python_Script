@@ -2,7 +2,7 @@ import os
 import pandas as pd
 if __name__ == '__main__':
     # Define the folder containing the CSV files
-    folder_path = r'C:\Users\gtush\Desktop\DrugBank_Set2\splits'
+    folder_path = r'C:\Users\gtush\Desktop\DrugBank_Set2\Collection2'
 
     # Get a list of all CSV files in the folder
     csv_files = [file for file in os.listdir(folder_path) if file.endswith('.csv')]
@@ -23,4 +23,3 @@ if __name__ == '__main__':
     merged_df.to_csv(r'C:\Users\gtush\Desktop\DrugBank_Set2\Complete2.csv', index=False)
 
     print("CSV files have been merged successfully into 'merged_output.csv'")
-

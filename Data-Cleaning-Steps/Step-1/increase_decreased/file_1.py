@@ -42,8 +42,8 @@ def replace_drug_in_sentence(row):
 
 
 if __name__ == '__main__':
-    for i in range(1, 9):
-        file_path = fr'C:\Users\gtush\Desktop\FinalCsv\complete_file_splits\complete_extract_data_file2_part{i}.csv'
+    for i in range(1, 3):
+        file_path = fr'C:\Users\gtush\Desktop\DrugBank_Set2\splits\data_cleaning_part{i}.csv'
         read_csv_file = pd.read_csv(file_path)
         # Drop base drug column
         # read_csv_file = read_csv_file.drop(columns=['sentence_without_drug'])

@@ -10,8 +10,8 @@ def process_object_of_effect(sentence):
 
 
 if __name__ == '__main__':
-    for i in range(1, 9):
-        file_path = fr'C:\Users\gtush\Desktop\FinalCsv\complete_file_splits\complete_extract_data_file2_part{i}.csv'
+    for i in range(1, 3):
+        file_path = fr'C:\Users\gtush\Desktop\DrugBank_Set2\splits\data_cleaning_part{i}.csv'
         # Read the CSV file
         read_csv_file = pd.read_csv(file_path)
 
