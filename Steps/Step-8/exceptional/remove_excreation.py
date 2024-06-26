@@ -6,11 +6,6 @@ def process_data(read_csv):
         if 'excretion' in row['remaining_sentence'] and pd.isna(row['Effect']):
             read_csv.at[index, 'remaining_sentence'] = row['remaining_sentence'].replace('excretion', '').strip()
             read_csv.at[index, 'Effect'] = 'excretion'
-
-        elif 'vasoconstricting activities' in row['remaining_sentence'] and pd.isna(row['Effect']):
-            read_csv.at[index, 'remaining_sentence'] = row['remaining_sentence'].replace('vasoconstricting activities',
-                                                                                         '').strip()
-            read_csv.at[index, 'Effect'] = 'vasoconstricting activities'
     return read_csv
 
 
