@@ -19,7 +19,7 @@ if __name__ == '__main__':
         read_csv_file['object_of_effect'] = read_csv_file['remaining_sentence'].apply(process_object_of_effect)
 
         # Display the dataframe
-        print(read_csv_file)
+        print(file_path)
 
         # # Optionally, save the modified dataframe to a new CSV file
         read_csv_file.to_csv(file_path, index=False)
