@@ -2,6 +2,9 @@ import math
 import json
 import requests
 import pandas as pd
+import time
+from threading import Thread, Semaphore
+from queue import Queue
 
 
 class DrugInteraction:
@@ -71,14 +74,8 @@ class DrugInteractionResponse:
         return interactions
 
 
-def call_api():
-    read_csv = pd.read_csv(r'C:\Users\gtush\Desktop\NotScrap\not_scrap_data.csv')
-    entries = [927, 1110, 1305, 601, 678, 840, 876]
-    header = {
-        'Cookie': '_hjSessionUser_191585=eyJpZCI6IjFjYjQwMzhhLWY1MmMtNTQ0Ni05MDViLWFlMTE0YzE4OGJlZCIsImNyZWF0ZWQiOjE3MTk0ODY1NTEwMjksImV4aXN0aW5nIjp0cnVlfQ==; _hjSession_191585=eyJpZCI6IjdhMGYzYTMxLTEyMmMtNDRiYi1hNTFlLTE3ZDRjNTc0YzU0YSIsImMiOjE3MTk0ODY1NTEwMzEsInMiOjEsInIiOjAsInNiIjowLCJzciI6MCwic2UiOjAsImZzIjoxLCJzcCI6MH0=; __adroll_fpc=f776830d750ce97f9e7f77a74be9be0f-1719486551611; _ga=GA1.1.1190176613.1719486553; cookieyes-consent=consentid:OFREQkRXQTk2cHI2T0RseXBmbkxoblRZcGRzTnZwTm0,consent:yes,action:no,necessary:yes,functional:yes,analytics:yes,performance:yes,advertisement:yes,other:yes; _clck=1vmek86%7C2%7Cfmz%7C0%7C1639; _gcl_au=1.1.1547361869.1719486555; __hstc=49600953.b9644f0fc178704f89df98fef3273f4f.1719486555548.1719486555548.1719486555548.1; hubspotutk=b9644f0fc178704f89df98fef3273f4f; __hssrc=1; remember_public_user_token=eyJfcmFpbHMiOnsibWVzc2FnZSI6Ilcxc3pOakkzTXpaZExDSWtNbUVrTVRFa1dXVkhSVmx4V1haU1pFSTVTbU5oZEZob09XSnZMaUlzSWpFM01UazBPRFkyTmpNdU56TXdOVE0xTXlKZCIsImV4cCI6IjIwMjQtMDctMTFUMTE6MTE6MDMuNzMwWiIsInB1ciI6ImNvb2tpZS5yZW1lbWJlcl9wdWJsaWNfdXNlcl90b2tlbiJ9fQ%3D%3D--8289dde4d86a6daa434775efb671d1291a7ac2e0; __ar_v4=FAPGZQH4LBBKDJ7BEHFFXV%3A20240627%3A8%7CTAP76L6PNZHKTLZBWZQUKO%3A20240627%3A8%7CDA674JDALNFITKMDU7VWN6%3A20240627%3A8; _clsk=htob10%7C1719488580996%7C12%7C1%7Ct.clarity.ms%2Fcollect; _ga_DDLJ7EEV9M=GS1.1.1719486550.1.1.1719488579.60.0.0; __hssc=49600953.8.1719486555549; _omx_drug_bank_session=6KKuz87o7Tvnnh0B2nE2GuHnx3bD1dIJsXhqFCO79lNbCw4uF0x%2FJZQstt4z5lmTefMUGFpsQMq2OtFUFXfJz2Upyont2Utw36%2BFHkG6ycU0ymM5lMrS8YyBKEA54onkmgE5CK4KW%2F5vtBHvtO0VzcZeMJG9MAt1YwNcI%2FyvG2No544M040foz7v7Cz6UgzLybf3Yzek82HIlIuDsDbP3ucdmzqzi0yWOvlsxXnLnJSyC2ePxVS2eYM5LCJK2dxcMgMUjhi1DTkm%2BXM3YtIAZd04UDaNrwPFdUKwegkhQ8WnwQS%2F4JPeqMHiYoJnhJ7RlQvDa1CAoMnLzMn365Cis4A%2Bib%2BE5EiaIeWUKl6bZJ4B850J851nSD9N1MTteL8VcZbkIasIJok7EL5lhN9HZysSevu5RFSRqWlkfwu3UF4N6C8v3XYAwaC7sEb%2FKfPUjI7XYI9HeoE6PmsGr2P6qNGGjiWgfaFAhasN4vcgiR%2B2tCfqdIUyaNCFVNYJHWTXOrL8L%2BwmmMWc%2FRc7Scaj0ABHaHj1ahYw9ByhhS%2BsHvnQ2rsd27ZUzt5%2B9oWzYra5foNW2semHHr5FQ%3D%3D--2ZZEb3auIHMwd9gw--8k1t%2F2mdpe7%2Bcj3V8W5lMw%3D%3D'  # Placeholder for the actual cookie
-    }
-
-    for index, entry in enumerate(entries):
+def fetch_data(index, entry, read_csv, header, queue, semaphore):
+    try:
         n_page = entry / 100
         number_of_pages = math.ceil(n_page)
         print(number_of_pages)
@@ -101,8 +98,18 @@ def call_api():
                 'start': start_count
             }
 
-            response = requests.get(url=url, headers=header, params=params)
-            response_dict = response.json()
+            while True:
+                try:
+                    response = requests.get(url=url, headers=header, params=params)
+                    if response.status_code == 429:
+                        print("Rate limit exceeded. Retrying after delay...")
+                        time.sleep(60)  # Delay before retrying
+                        continue
+                    response_dict = response.json()
+                    break
+                except requests.exceptions.RequestException as e:
+                    print(f"Request failed: {e}. Retrying...")
+                    time.sleep(10)  # Delay before retrying
 
             drug_interaction_response = DrugInteractionResponse(
                 draw=response_dict["draw"],
@@ -115,10 +122,12 @@ def call_api():
             print(len(interactions))
             for drug_name, drug_url, interaction_description in interactions:
                 drug_name_list.append(drug_name)
-                drug_url_list.append("https://go.drugbank.com"+drug_url)
+                drug_url_list.append("https://go.drugbank.com" + drug_url)
                 interaction_list.append(interaction_description)
                 base_drug_list.append(read_csv.at[index, 'Name'])
                 base_url_list.append(read_csv.at[index, 'Drug URL'])
+
+            time.sleep(1)  # Delay to avoid rate limit
 
         df = pd.DataFrame({
             "Drug": drug_name_list,
@@ -128,8 +137,36 @@ def call_api():
             "Base_Drug URL": base_url_list
         })
         drug_url = read_csv.at[index, 'Drug URL'].split("/")[-1]
-        df.to_csv(fr'C:\Users\gtush\Desktop\Collection_2\{drug_url}.csv', index=False)
-        print(fr'C:\Users\gtush\Desktop\Collection_2\{drug_url}.csv')
+        output_path = fr'C:\Users\gtush\Desktop\Collection_2\{drug_url}.csv'
+        df.to_csv(output_path, index=False)
+        print(output_path)
+        queue.put(output_path)
+    finally:
+        semaphore.release()
+
+
+def call_api():
+    read_csv = pd.read_csv(r'C:\Users\gtush\Desktop\NotScrap\not_scrap_data.csv')
+    entries = read_csv['Entries']
+    header = {
+        'Cookie': '_hjSessionUser_191585=eyJpZCI6IjFjYjQwMzhhLWY1MmMtNTQ0Ni05MDViLWFlMTE0YzE4OGJlZCIsImNyZWF0ZWQiOjE3MTk0ODY1NTEwMjksImV4aXN0aW5nIjp0cnVlfQ==; _hjSession_191585=eyJpZCI6IjdhMGYzYTMxLTEyMmMtNDRiYi1hNTFlLTE3ZDRjNTc0YzU0YSIsImMiOjE3MTk0ODY1NTEwMzEsInMiOjEsInIiOjAsInNiIjowLCJzciI6MCwic2UiOjAsImZzIjoxLCJzcCI6MH0=; __adroll_fpc=f776830d750ce97f9e7f77a74be9be0f-1719486551611; _ga=GA1.1.1190176613.1719486553; cookieyes-consent=consentid:OFREQkRXQTk2cHI2T0RseXBmbkxoblRZcGRzTnZwTm0,consent:yes,action:no,necessary:yes,functional:yes,analytics:yes,performance:yes,advertisement:yes,other:yes; _clck=1vmek86%7C2%7Cfmz%7C0%7C1639; _gcl_au=1.1.1547361869.1719486555; __hstc=49600953.b9644f0fc178704f89df98fef3273f4f.1719486555548.1719486555548.1719486555548.1; hubspotutk=b9644f0fc178704f89df98fef3273f4f; __hssrc=1; remember_public_user_token=eyJfcmFpbHMiOnsibWVzc2FnZSI6Ilcxc3pOakkzTXpaZExDSWtNbUVrTVRFa1dXVkhSVmx4V1haU1pFSTVTbU5oZEZob09XSnZMaUlzSWpFM01UazBPRFkyTmpNdU56TXdOVE0xTXlKZCIsImV4cCI6IjIwMjQtMDctMTFUMTE6MTE6MDMuNzMwWiIsInB1ciI6ImNvb2tpZS5yZW1lbWJlcl9wdWJsaWNfdXNlcl90b2tlbiJ9fQ%3D%3D--8289dde4d86a6daa434775efb671d1291a7ac2e0; __ar_v4=FAPGZQH4LBBKDJ7BEHFFXV%3A20240627%3A8%7CTAP76L6PNZHKTLZBWZQUKO%3A20240627%3A8%7CDA674JDALNFITKMDU7VWN6%3A20240627%3A8; _clsk=htob10%7C1719488580996%7C12%7C1%7Ct.clarity.ms%2Fcollect; _ga_DDLJ7EEV9M=GS1.1.1719486550.1.1.1719488579.60.0.0; __hssc=49600953.8.1719486555549; _omx_drug_bank_session=6KKuz87o7Tvnnh0B2nE2GuHnx3bD1dIJsXhqFCO79lNbCw4uF0x%2FJZQstt4z5lmTefMUGFpsQMq2OtFUFXfJz2Upyont2Utw36%2BFHkG6ycU0ymM5lMrS8YyBKEA54onkmgE5CK4KW%2F5vtBHvtO0VzcZeMJG9MAt1YwNcI%2FyvG2No544M040foz7v7Cz6UgzLybf3Yzek82HIlIuDsDbP3ucdmzqzi0yWOvlsxXnLnJSyC2ePxVS2eYM5LCJK2dxcMgMUjhi1DTkm%2BXM3YtIAZd04UDaNrwPFdUKwegkhQ8WnwQS%2F4JPeqMHiYoJnhJ7RlQvDa1CAoMnLzMn365Cis4A%2Bib%2BE5EiaIeWUKl6bZJ4B850J851nSD9N1MTteL8VcZbkIasIJok7EL5lhN9HZysSevu5RFSRqWlkfwu3UF4N6C8v3XYAwaC7sEb%2FKfPUjI7XYI9HeoE6PmsGr2P6qNGGjiWgfaFAhasN4vcgiR%2B2tCfqdIUyaNCFVNYJHWTXOrL8L%2BwmmMWc%2FRc7Scaj0ABHaHj1ahYw9ByhhS%2BsHvnQ2rsd27ZUzt5%2B9oWzYra5foNW2semHHr5FQ%3D%3D--2ZZEb3auIHMwd9gw--8k1t%2F2mdpe7%2Bcj3V8W5lMw%3D%3D'
+    }
+
+    threads = []
+    queue = Queue()
+    semaphore = Semaphore(5)  # Limit to 5 threads at a time
+
+    for index, entry in enumerate(entries):
+        semaphore.acquire()
+        thread = Thread(target=fetch_data, args=(index, entry, read_csv, header, queue, semaphore))
+        threads.append(thread)
+        thread.start()
+
+    for thread in threads:
+        thread.join()
+
+    while not queue.empty():
+        print(f"Output file: {queue.get()}")
 
 
 if __name__ == '__main__':
