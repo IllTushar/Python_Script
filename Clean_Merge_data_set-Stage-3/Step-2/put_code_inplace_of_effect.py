@@ -3,7 +3,7 @@ import pandas as pd
 
 def process_data(merge_file, effect_code):
     # Create a dictionary for effect codes
-    effect_codes = effect_code.set_index('Merged String')['Code'].to_dict()
+    effect_codes = effect_code.set_index('Cleaned_Effect')['Code'].to_dict()
 
     # List of effect columns to be processed
     effect_columns = ['Effect_1', 'Effect_2', 'Effect_3', 'Effect_4', 'Effect_5']
@@ -20,9 +20,10 @@ if __name__ == '__main__':
         read_merge_file_path = file_path
         merge_file = pd.read_csv(read_merge_file_path)
 
-        effect_code_file_path = r'C:\Users\gtush\Desktop\Effects\Effects_Cleaned.csv'
+        effect_code_file_path = r'C:\Users\gtush\Desktop\Effects\final_Effect_Cleaned.csv'
         effect_code = pd.read_csv(effect_code_file_path)
 
         merge_file = process_data(merge_file, effect_code)
 
         merge_file.to_csv(read_merge_file_path, index=False)
+        print(file_path)
