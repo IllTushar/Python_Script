@@ -10,6 +10,6 @@ def split_csv(file_path, chunk_size=100000):
 
 
 if __name__ == '__main__':
-    file_path = r'C:\Users\gtush\Desktop\DrugBank_Set2\Complete2.csv'
+    file_path = r'C:\Users\gtush\Desktop\Merge_Set3orSet4\effect_splits\final_effect_merge_file.csv'
     # Call the function to split the CSV file
     split_csv(file_path)

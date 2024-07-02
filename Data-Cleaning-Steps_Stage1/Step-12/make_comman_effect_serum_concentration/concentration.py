@@ -2,13 +2,14 @@ import pandas as pd
 
 
 def process_the_serum_concentration(row):
-    if 'higher serum level' in row['Effect']:
+    effect_value = str(row['Effect'])
+    if 'higher serum level' in effect_value:
         row.at['Effect'] = 'serum concentration'
         row.at['Direction'] = 'increased'
-    elif 'lower serum level' in row['Effect']:
+    elif 'lower serum level' in effect_value:
         row.at['Effect'] = 'serum concentration'
         row.at['Direction'] = 'decreased'
-    elif 'absorption' in row['Effect']:
+    elif 'absorption' in effect_value:
         row.at['Effect'] = 'serum concentration'
     else:
         pass
@@ -16,8 +17,8 @@ def process_the_serum_concentration(row):
 
 
 if __name__ == '__main__':
-    for i in range(1, 3):
-        file_path = fr'C:\Users\gtush\Desktop\DrugBank_Set2\splits\data_cleaning_part{i}.csv'
+    for i in range(1, 2):
+        file_path = fr'C:\Users\gtush\Desktop\drug_cleaning\splits\final_set_{i}.csv'
 
         read_file_csv = pd.read_csv(file_path)
 

@@ -18,12 +18,11 @@ def handle_exception_2(read_csv):
 
 
 if __name__ == '__main__':
-    for i in range(1, 3):
-        file_path = fr'C:\Users\gtush\Desktop\Data_Cleaning_stage_2\Complete{i}.csv'
-        read_csv = pd.read_csv(file_path)
+    # for i in range(1, 3):
+    file_path = r'C:\Users\gtush\Desktop\Merge_Set3orSet4\MergeFile2.csv'
+    read_csv = pd.read_csv(file_path)
 
-        # read_csv = handle_exception(read_csv)
-        read_csv = handle_exception_2(read_csv)
+    # read_csv = handle_exception(read_csv)
+    read_csv = handle_exception_2(read_csv)
 
-        read_csv.to_csv(file_path, index=False)
-
+    read_csv.to_csv(file_path, index=False)

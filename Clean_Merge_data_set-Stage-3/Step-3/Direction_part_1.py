@@ -8,12 +8,13 @@ def data_process(cleaner_df, merger_df):
     # Iterate over the merger DataFrame
     for index, row in merger_df.iterrows():
         effects = row['Effect'].split(',')
+        direction = row['Direction']
         count = 1
         for effect in effects:
             effect = effect.strip()  # Remove any surrounding whitespace
             if effect in clean_dict:
-                column_name = f'Effect_{count}'
-                merger_df.at[index, column_name] = clean_dict[effect]
+                column_name = f'Dir_{count}'
+                merger_df.at[index, column_name] = clean_dict[effect] + "_" + direction
                 count += 1
 
     return merger_df
@@ -30,4 +31,4 @@ if __name__ == '__main__':
         processed_df = data_process(cleaner_df, merger_df)
 
         processed_df.to_csv(merger_file_path, index=False)
-        print()
+        print(file_path)

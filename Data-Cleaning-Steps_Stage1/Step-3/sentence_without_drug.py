@@ -11,8 +11,8 @@ def remove_drug(read_csv_file):
 
 
 if __name__ == '__main__':
-    for i in range(1, 3):
-        file_path = fr'C:\Users\gtush\Desktop\DrugBank_Set2\splits\data_cleaning_part{i}.csv'
+    for i in range(1, 2):
+        file_path = fr'C:\Users\gtush\Desktop\drug_cleaning\splits\final_set_{i}.csv'
         read_csv_file = pd.read_csv(file_path)
 
         read_csv_file['remaining_sentence'] = read_csv_file.apply(remove_drug, axis=1)

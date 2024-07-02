@@ -16,12 +16,12 @@ def process_csv_file(read_csv_file):
 
 
 if __name__ == '__main__':
-    file_path = r'C:\Users\gtush\Desktop\Data_Cleaning_stage_2\merge_file.csv'
+    file_path = r'C:\Users\gtush\Desktop\Merge_Set3orSet4\MergeFile2.csv'
     read_csv_file = pd.read_csv(file_path)
 
     data = process_csv_file(read_csv_file)
     df = pd.DataFrame({"Effects": list(data)})
     # print(df)
-    output_path = r'C:\Users\gtush\Desktop\Effects\effect_data.csv'
+    output_path = r'C:\Users\gtush\Desktop\Merge_Set3orSet4\merge_output_effect_data.csv'
     df.to_csv(output_path, index=False)
     print(output_path)

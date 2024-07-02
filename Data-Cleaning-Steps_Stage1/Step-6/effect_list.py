@@ -12,8 +12,8 @@ def effects(row, effect):
 if __name__ == '__main__':
     read_effect_list_csv = pd.read_csv(r'C:\Users\gtush\Desktop\Effects\effect_list.csv')
     effect = read_effect_list_csv['effect'].tolist()
-    for i in range(1, 3):
-        file_path = fr'C:\Users\gtush\Desktop\DrugBank_Set2\splits\data_cleaning_part{i}.csv'
+    for i in range(1, 2):
+        file_path = fr'C:\Users\gtush\Desktop\drug_cleaning\splits\final_set_{i}.csv'
         read_csv_file = pd.read_csv(file_path)
 
         read_csv_file['Effect'] = read_csv_file.apply(lambda row: effects(row, effect), axis=1)
