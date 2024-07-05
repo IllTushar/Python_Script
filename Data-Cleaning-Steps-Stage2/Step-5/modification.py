@@ -21,7 +21,7 @@ def data_process(read_csv):
 
             read_csv.at[index, 'Effect'] = effect.replace('CNS stimulation', 'CNS Depression')
 
-        if 'Decreased alertness activities' in effect:
+        elif 'Decreased alertness activities' in effect:
             read_csv.at[index, 'Direction'] = direction.replace('increased', 'decreased')
             read_csv.at[index, 'Effect'] = effect.replace('Decreased alertness activities', 'alertness activities')
 
