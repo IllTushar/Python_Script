@@ -1,36 +1,30 @@
 import pandas as pd
-import concurrent.futures
-
-
-def process_row(row):
-    # Create data_list using list comprehension
-    data_list = [
-        f"{row[f'Dir_{i}']}{row[f'Effect_{i}']}"
-        for i in range(1, 6)
-        if pd.notna(row[f'Dir_{i}']) and pd.notna(row[f'Effect_{i}'])
-    ]
-
-    formatted_value = f'{data_list} | {str(row["final_severity_level"])}'
-
-    return formatted_value
-
+import numpy as np
 
 if __name__ == '__main__':
-    # Read the CSV file
-    input_file = r'C:\Users\gtush\Desktop\Merge_Set3orSet4\final_effect_merge_file.csv'
-    read_file = pd.read_csv(input_file)
+    # Load the main file
+    read_main_file = pd.read_csv(r'C:\Users\gtush\Desktop\Merge_Set3orSet4\final_effect_merge_file.csv')
 
-    # Process the first 40 rows using multithreading
-    with concurrent.futures.ThreadPoolExecutor(max_workers=5) as executor:
-        futures = {executor.submit(process_row, row): index for index, row in read_file.iterrows()}
+    # Load the rows and columns
+    base_drug = pd.read_csv(r'C:\Users\gtush\Desktop\matrix\rows.csv')
+    rows = base_drug['Base Drug'].tolist()
 
-        for future in concurrent.futures.as_completed(futures):
-            index = futures[future]
-            print(index)
-            formatted_value = future.result()
-            read_file.at[index, 'formatted_data'] = formatted_value
+    drug = pd.read_csv(r'C:\Users\gtush\Desktop\matrix\columns.csv')
+    columns = drug['Drug'].tolist()
 
-    # Save the modified DataFrame to the same CSV file
-    read_file.to_csv(input_file, index=False)
+    # Initialize the matrix with empty strings
+    matrix = np.full((len(rows), len(columns)), '', dtype=object)
 
-    print(f'File saved successfully: {input_file}')
+    # Fill the matrix
+    for index, row in read_main_file.iterrows():
+        BaseDrug = row['Base Drug']
+        Drug = row['Drug']
+
+        if BaseDrug in rows and Drug in columns:
+            row_index = rows.index(BaseDrug)
+            col_index = columns.index(Drug)
+            matrix[row_index, col_index] = row['formatted_data']
+
+    # Convert the matrix to a DataFrame for better visualization
+    matrix_df = pd.DataFrame(matrix, index=rows, columns=columns)
+    matrix_df.to_csv(r'C:\Users\gtush\Desktop\matrix\compress.csv')
