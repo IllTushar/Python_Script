@@ -17,8 +17,8 @@ if __name__ == '__main__':
 
     # Fill the matrix
     for index, row in read_main_file.iterrows():
-        BaseDrug = row['Base Drug']
-        Drug = row['Drug']
+        BaseDrug = row['BaseDrugCode']
+        Drug = row['DrugCode']
 
         if BaseDrug in rows and Drug in columns:
             row_index = rows.index(BaseDrug)
